@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CineTalk</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background:
+                linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)),
+                url("movies.jpg");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 🎬 INTRO SCREEN */
+        #intro {
+            position: fixed;
+            inset: 0;
+            background: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5000;
+            overflow: hidden;
+        }
+
+        .intro-logo {
+            display: flex;
+            font-size: 64px;
+            font-weight: 900;
+            letter-spacing: 4px;
+            color: #6a11cb;
+        }
+
+        .intro-logo span {
+            display: inline-block;
+            animation: splitOut 2.2s ease forwards;
+        }
+
+        .intro-logo span:nth-child(1) { animation-delay: 0s; }
+        .intro-logo span:nth-child(2) { animation-delay: 0.06s; }
+        .intro-logo span:nth-child(3) { animation-delay: 0.12s; }
+        .intro-logo span:nth-child(4) { animation-delay: 0.18s; }
+        .intro-logo span:nth-child(5) { animation-delay: 0.24s; }
+        .intro-logo span:nth-child(6) { animation-delay: 0.30s; }
+        .intro-logo span:nth-child(7) { animation-delay: 0.36s; }
+        .intro-logo span:nth-child(8) { animation-delay: 0.42s; }
+
+        @keyframes splitOut {
+            0% {
+                opacity: 0;
+                transform: translateY(40px) scale(0.8);
+            }
+            40% {
+                opacity: 1;
+                transform: translateY(0) scale(1.15);
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(450px);
+            }
+        }
+
+        /* TOP LOGO */
+        .text-logo {
+            position: fixed;
+            top: 20px;
+            left: 40px;
+            font-size: 32px;
+            font-weight: 900;
+            color: #6a11cb;
+            z-index: 1000;
+            opacity: 0;
+            animation: logoFade 1s ease forwards;
+            animation-delay: 2.2s;
+        }
+
+        @keyframes logoFade {
+            to { opacity: 1; }
+        }
+
+        /* LOGIN CARD */
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255,255,255,0.95);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.8s ease;
+        }
+
+        .login-card.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        h3 {
+            color: #6a11cb;
+            font-weight: bold;
+        }
+
+        .form-control {
+            border-radius: 12px;
+        }
+
+        .btn-login {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            border: none;
+            border-radius: 12px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .signup-link a {
+            color: #2575fc;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .form-animate {
+            animation: slideFade 0.4s ease;
+        }
+
+        @keyframes slideFade {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- 🎬 INTRO -->
+<div id="intro">
+    <div class="intro-logo">
+        <span>C</span><span>i</span><span>n</span><span>e</span>
+        <span>T</span><span>a</span><span>l</span><span>k</span>
+    </div>
+</div>
+
+<!-- TOP LOGO -->
+<div class="text-logo">CineTalk</div>
+
+<div class="login-card" id="loginCard">
+    <h3 class="text-center mb-4" id="title">Welcome</h3>
+
+    <!-- LOGIN -->
+    <form id="loginForm" onsubmit="loginUser(event)">
+        <div class="mb-3">
+            <label>Email</label>
+            <input type="email" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Password</label>
+            <input type="password" class="form-control" required>
+        </div>
+
+        <button class="btn btn-login w-100 mt-2">Login</button>
+
+        <p class="text-center mt-3 signup-link">
+            New user? <a onclick="showSignup()">Create an account</a>
+        </p>
+    </form>
+
+    <!-- SIGNUP -->
+    <form id="signupForm" style="display:none;" onsubmit="signupUser(event)">
+        <div class="mb-3">
+            <label>Name</label>
+            <input type="text" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Email</label>
+            <input type="email" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Password</label>
+            <input type="password" class="form-control" required>
+        </div>
+
+        <button class="btn btn-login w-100 mt-2">Sign Up</button>
+
+        <p class="text-center mt-3 signup-link">
+            Already have an account? <a onclick="showLogin()">Back to Login</a>
+        </p>
+    </form>
+</div>
+
+<script>
+const loginForm = document.getElementById("loginForm");
+const signupForm = document.getElementById("signupForm");
+const title = document.getElementById("title");
+
+window.onload = () => {
+    setTimeout(() => {
+        document.getElementById("intro").remove();
+        document.getElementById("loginCard").classList.add("show");
+    }, 2200);
+};
+
+function showSignup() {
+    loginForm.style.display = "none";
+    signupForm.style.display = "block";
+    signupForm.classList.add("form-animate");
+    title.innerText = "Get Started!";
+}
+
+function showLogin() {
+    signupForm.style.display = "none";
+    loginForm.style.display = "block";
+    loginForm.classList.add("form-animate");
+    title.innerText = "Welcome";
+}
+
+function loginUser(e) {
+    e.preventDefault();
+    alert("Login clicked (frontend only)");
+}
+
+function signupUser(e) {
+    e.preventDefault();
+    alert("Signup successful (frontend only)");
+}
+</script>
+
+</body>
+</html>
